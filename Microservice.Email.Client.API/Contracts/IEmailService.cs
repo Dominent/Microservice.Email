@@ -1,7 +1,5 @@
 ﻿namespace Microservice.Email.Client.API.Contracts
 {
-    using System.Threading.Tasks;
-
     public interface IEmailService
     {
         void SendTextAsync(EmailInfo emailInfo);

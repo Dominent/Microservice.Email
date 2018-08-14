@@ -53,7 +53,7 @@
                 return this.StatusCode(503, ex.Message);
             }
 
-            return Ok(new { Message = "Successfully sent html email!" });
+            return Ok(new { Message = "Successfully sent HTML email!" });
         }
     }
 }
