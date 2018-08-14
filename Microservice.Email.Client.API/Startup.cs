@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microservice.Email.Client.API.Contracts;
+﻿using Microservice.Email.Client.API.Contracts;
 using Microservice.Email.Client.API.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Microservice.Email.Client.API
 {
@@ -28,7 +22,9 @@ namespace Microservice.Email.Client.API
             services.AddMvc();
 
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<IEmailService>(new GmailService(Configuration["Email:Username"], Configuration["Email:Password"]));
+            services.AddSingleton<IEmailService>(new GmailService(
+                Configuration["Email:Username"],
+                Configuration["Email:Password"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

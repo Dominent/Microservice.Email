@@ -4,7 +4,9 @@
 
     public interface IEmailService
     {
-        Task SendAsync(EmailInfo emailInfo);
+        void SendTextAsync(EmailInfo emailInfo);
+
+        void SendHtmlAsync(EmailInfo emailInfo);
     }
 
     public class EmailInfo
