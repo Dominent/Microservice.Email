@@ -6,7 +6,6 @@
     using System.Net;
     using System.Net.Mail;
 
-    //api/email/text?username=petromilpavlov@gmail.com&password="Svetlio78"
     public class GmailService : IEmailService
     {
         private IConfiguration _configuration;
