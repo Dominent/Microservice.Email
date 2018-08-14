@@ -16,7 +16,10 @@
 
         [HttpPost]
         [Route("text")]
-        public IActionResult SendTextEmail([FromBody]EmailInfo emailInfo)
+        public IActionResult SendTextEmail(
+            [FromQuery]string username,
+            [FromQuery]string password,
+            [FromBody]EmailInfo emailInfo)
         {
             if (!ModelState.IsValid)
             {
@@ -25,7 +28,10 @@
 
             try
             {
-                this._emailService.SendTextAsync(emailInfo);
+                this._emailService.SendTextAsync(emailInfo, new EmailCredentials() {
+                    Username = username,
+                    Password = password
+                });
             }
             catch (Exception ex)
             {
@@ -37,7 +43,10 @@
 
         [HttpPost]
         [Route("html")]
-        public IActionResult SendHtmlEmail([FromBody]EmailInfo emailInfo)
+        public IActionResult SendHtmlEmail(
+            [FromQuery]string username,
+            [FromQuery]string password,
+            [FromBody]EmailInfo emailInfo)
         {
             if (!ModelState.IsValid)
             {
@@ -46,7 +55,11 @@
 
             try
             {
-                this._emailService.SendHtmlAsync(emailInfo);
+                this._emailService.SendHtmlAsync(emailInfo, new EmailCredentials()
+                {
+                    Username = username,
+                    Password = password
+                });
             }
             catch (Exception ex)
             {

@@ -6,11 +6,9 @@
     using System.Net;
     using System.Net.Mail;
 
+    //api/email/text?username=petromilpavlov@gmail.com&password="Svetlio78"
     public class GmailService : IEmailService
     {
-        private string _username;
-        private string _password;
-        private SmtpClient _client;
         private IConfiguration _configuration;
 
         public GmailService(IConfiguration configuration)
@@ -18,47 +16,42 @@
             this._configuration = configuration;
         }
 
-        public GmailService(string username, string password)
-        {
-            this._username = username;
-            this._password = password;
-
-            this.Initialize();
-        }
-
-        private void Initialize()
-        {
-            var host = this._configuration["Email:Host"];
-            var port = Int32.Parse(this._configuration["Email:Port"]);
-
-            this._client = new SmtpClient
-            {
-                Host = host,
-                Port = port,
-                EnableSsl = true,
-                Credentials = new NetworkCredential(this._username, this._password)
-            };
-        }
-
-        public void SendHtmlAsync(EmailInfo emailInfo)
+        public void SendHtmlAsync(EmailInfo emailInfo, EmailCredentials credentials)
         {
             var message = BuildEmailMessage(emailInfo);
 
             message.IsBodyHtml = true;
 
-            this._client.SendMailAsync(message);
+            this.BuildEmailClient(credentials)
+                    .SendMailAsync(message);
         }
 
-        public void SendTextAsync(EmailInfo emailInfo)
+        public void SendTextAsync(EmailInfo emailInfo, EmailCredentials credentials)
         {
-            this._client.SendMailAsync(BuildEmailMessage(emailInfo));
+            this.BuildEmailClient(credentials)
+                  .SendMailAsync(BuildEmailMessage(emailInfo));
         }
 
         private MailMessage BuildEmailMessage(EmailInfo emailInfo)
         {
-            return new MailMessage(this._username, emailInfo.To) {
+            return new MailMessage(emailInfo.Sender, emailInfo.Receiver)
+            {
                 Subject = emailInfo.Title,
                 Body = emailInfo.Message
+            };
+        }
+
+        private SmtpClient BuildEmailClient(EmailCredentials credentials)
+        {
+            var host = this._configuration["Email:Host"];
+            var port = Int32.Parse(this._configuration["Email:Port"]);
+
+            return new SmtpClient
+            {
+                Host = host,
+                Port = port,
+                EnableSsl = true,
+                Credentials = new NetworkCredential(credentials.Username, credentials.Password)
             };
         }
     }
